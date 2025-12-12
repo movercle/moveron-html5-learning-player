@@ -1,0 +1,157 @@
+# Operating System Files
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# Editor and IDE Files
+# Visual Studio Code
+.vscode/
+*.code-workspace
+.history/
+
+# JetBrains IDEs (WebStorm, IntelliJ, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+.*.sw?
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# Atom
+.atom/
+
+# Node.js (if using build tools)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+.pnpm-debug.log*
+
+# Build and Distribution
+dist/
+build/
+*.min.js
+*.min.css
+*.map
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.cache
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+
+# Backup files
+*.bak
+*.backup
+*.old
+*~
+
+# Compressed files (unless needed)
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# Large media files (optional - uncomment if needed)
+# *.mp4
+# *.avi
+# *.mov
+# *.wmv
+# *.flv
+# *.webm
+
+# PDF files (optional - uncomment if you don't want to track PDFs)
+# *.pdf
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+
+# Documentation build
+docs/_build/
+site/
+
+# Python (if using any Python tools)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+
+# Miscellaneous
+.sass-cache/
+.eslintcache
+.parcel-cache/
+.cache/
+.next/
+.nuxt/
+.vuepress/dist/
+
+# Project specific
+# Add any project-specific files or folders to ignore below
+
