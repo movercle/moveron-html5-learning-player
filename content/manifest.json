@@ -1,0 +1,7 @@
+{
+  "contentId": "poc-html5-001",
+  "version": "1.0.0",
+  "type": "HTML5",
+  "entry": "index.html",
+  "supports": ["POST_MESSAGE_SDK", "RESUME", "SCORE", "COMPLETE"]
+}

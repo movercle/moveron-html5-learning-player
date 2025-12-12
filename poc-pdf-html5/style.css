@@ -1,0 +1,25 @@
+:root { font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", sans-serif; }
+body { margin:0; background:#f6f7fb; color:#111; }
+.top { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:#fff; border-bottom:1px solid #e7e7ee; }
+.brand { font-weight: 800; }
+.meta { display:flex; gap:12px; font-size: 12px; color:#444; }
+
+.wrap { max-width: 980px; margin: 16px auto; padding: 0 12px; }
+.card { background:#fff; border:1px solid #e7e7ee; border-radius: 14px; padding: 14px; margin-bottom: 12px; }
+.desc { margin-top: 6px; color:#333; }
+
+.toolbar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding: 10px; border:1px solid #eee; border-radius: 12px; background:#fcfcff; }
+.pager { min-width: 90px; text-align:center; font-weight:700; }
+.spacer { flex: 1; }
+.zoom { min-width: 60px; text-align:center; font-size: 12px; color:#444; }
+
+.btn { padding: 8px 10px; border:1px solid #ddd; background:#fff; border-radius: 10px; cursor:pointer; }
+.primary { background:#222; color:#fff; border-color:#222; font-weight:700; }
+
+.viewerShell { margin-top: 12px; border:1px solid #eee; border-radius: 12px; overflow:hidden; }
+.viewer { height: 70vh; overflow:auto; background:#1b1b1b; display:flex; justify-content:center; padding: 14px; }
+canvas { background:#fff; border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,.25); }
+
+.progressInfo { margin-top: 10px; font-size: 13px; color:#333; display:flex; gap: 10px; flex-wrap:wrap; }
+.logs pre { margin: 0; white-space: pre-wrap; font-size: 12px; color:#222; }
+.logTitle { font-weight: 800; margin-bottom: 8px; }

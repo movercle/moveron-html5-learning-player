@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>샘플 HTML5 콘텐츠</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>샘플 학습 콘텐츠</h1>
+  <p>이 콘텐츠는 MoverOn 플랫폼 연동 테스트용 샘플입니다.</p>
+
+  <button onclick="visitPage()">페이지 방문 이벤트</button>
+  <button onclick="submitAnswer()">문항 제출</button>
+  <button onclick="complete()">학습 완료</button>
+
+  <script src="sdk.js"></script>
+  <script>
+    mover.init({
+      contentId: "sample-content-001",
+      contentVersion: "1.0.0"
+    });
+
+    function visitPage() {
+      mover.track("VIEW", { page: 1 });
+      alert("VIEW 이벤트 전송");
+    }
+
+    function submitAnswer() {
+      mover.track("ANSWER", {
+        itemId: "q1",
+        response: "서울",
+        correct: true,
+        attempts: 1,
+        scoreDelta: 100
+      });
+      mover.track("SCORE", { scoreRaw: 100, scoreMax: 100 });
+      alert("정답 이벤트 전송");
+    }
+
+    function complete() {
+      mover.complete({
+        completion: true,
+        success: true,
+        scoreRaw: 100,
+        scoreMax: 100,
+        totalTimeMs: 30000
+      });
+      alert("COMPLETE 이벤트 전송");
+    }
+  </script>
+</body>
+</html>

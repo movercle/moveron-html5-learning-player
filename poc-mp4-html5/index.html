@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MP4 Player POC</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="brand">MoverOn MP4 POC</div>
+    <div class="meta">
+      <span id="sessionBadge">session: -</span>
+      <span id="statusBadge">status: READY</span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <h1>동영상 학습 콘텐츠</h1>
+    <p class="desc">
+      MP4를 재생하면서 <b>재생/일시정지/진행률/시청률/배속/전체화면/Resume</b>를 지원합니다.<br/>
+      이벤트는 <code>postMessage</code> 기반 SDK로 부모(플레이어/LMS)로 전송합니다.
+    </p>
+
+    <section class="card">
+      <div class="playerShell">
+        <video id="video" playsinline preload="metadata">
+          <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
+          <!-- 자막이 있다면 아래처럼 추가 -->
+          <!-- <track kind="subtitles" src="./captions.vtt" srclang="ko" label="Korean" default /> -->
+        </video>
+
+        <!-- 커스텀 컨트롤 -->
+        <div class="controls">
+          <button id="btnPlay" class="btn primary">재생</button>
+          <button id="btnPause" class="btn">일시정지</button>
+
+          <div class="time">
+            <span id="cur">0:00</span> / <span id="dur">0:00</span>
+          </div>
+
+          <input id="seek" class="seek" type="range" min="0" max="1000" value="0" />
+
+          <div class="right">
+            <label class="speed">
+              배속
+              <select id="rate">
+                <option value="0.75">0.75x</option>
+                <option value="1" selected>1.0x</option>
+                <option value="1.25">1.25x</option>
+                <option value="1.5">1.5x</option>
+                <option value="2">2.0x</option>
+              </select>
+            </label>
+            <button id="btnMute" class="btn">음소거</button>
+            <button id="btnFs" class="btn">전체화면</button>
+          </div>
+        </div>
+
+        <div class="progressInfo">
+          시청률: <b id="ratio">0%</b> · 누적 시청: <b id="watched">0s</b>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="btnSuspend" class="btn">중단(Resume 저장)</button>
+        <button id="btnResume" class="btn">Resume 불러오기</button>
+        <button id="btnComplete" class="btn primary">완료 처리(예: 80% 시청)</button>
+      </div>
+    </section>
+
+    <section class="card logs">
+      <div class="logTitle">콘텐츠 내부 로그</div>
+      <pre id="log"></pre>
+    </section>
+  </main>
+
+  <script src="./sdk.js"></script>
+  <script src="./player.js"></script>
+</body>
+</html>

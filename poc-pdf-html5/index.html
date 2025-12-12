@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PDF 학습 POC</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+<header class="top">
+  <div class="brand">MoverOn PDF POC</div>
+  <div class="meta">
+    <span id="sessionBadge">session: -</span>
+    <span id="statusBadge">status: READY</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="card">
+    <h1>PDF 학습 콘텐츠</h1>
+    <p class="desc">
+      PDF를 페이지 단위로 렌더링하고, <b>진도/페이지 체류/완료/Resume</b> 이벤트를 추적합니다.
+    </p>
+
+    <div class="toolbar">
+      <button id="btnPrev" class="btn">이전</button>
+      <div class="pager">
+        <span id="pageNow">1</span> / <span id="pageTotal">?</span>
+      </div>
+      <button id="btnNext" class="btn">다음</button>
+
+      <div class="spacer"></div>
+
+      <button id="btnZoomOut" class="btn">-</button>
+      <span class="zoom" id="zoomLabel">100%</span>
+      <button id="btnZoomIn" class="btn">+</button>
+
+      <button id="btnSuspend" class="btn">중단(Resume 저장)</button>
+      <button id="btnResume" class="btn">Resume 불러오기</button>
+      <button id="btnComplete" class="btn primary">완료 처리</button>
+    </div>
+
+    <div class="viewerShell" id="viewerShell">
+      <div class="viewer" id="viewer">
+        <canvas id="canvas"></canvas>
+      </div>
+    </div>
+
+    <div class="progressInfo">
+      진도: <b id="progress">0%</b> · 누적 학습: <b id="totalTime">0s</b> · 현재 페이지 체류: <b id="pageTime">0s</b>
+    </div>
+  </section>
+
+  <section class="card logs">
+    <div class="logTitle">콘텐츠 내부 로그</div>
+    <pre id="log"></pre>
+  </section>
+</main>
+
+<script src="./sdk.js"></script>
+
+<!-- PDF.js CDN (POC용) - 안정적인 버전 사용 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<script>
+  // PDF.js Worker 설정 (필수)
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  // PDF 소스
+  window.PDF_URL = "./c4611_sample_explain.pdf";
+</script>
+
+<script src="./pdf.js"></script>
+</body>
+</html>

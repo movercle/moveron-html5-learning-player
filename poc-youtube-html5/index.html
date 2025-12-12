@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>YouTube HTML5 POC</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+<header class="top">
+  <b>YouTube HTML5 POC</b>
+  <span id="status">READY</span>
+</header>
+
+<main class="wrap">
+  <h1>교육용 YouTube 콘텐츠</h1>
+  <p>
+    YouTube 영상을 iframe으로 재생하고,<br/>
+    시청률·재생 이벤트를 <b>자체 API</b>로 전송하는 POC 예제입니다.
+  </p>
+
+  <!-- YouTube Player -->
+  <div class="player-box">
+    <div id="player"></div>
+  </div>
+
+  <div class="info">
+    <div>시청 시간: <b id="time">0</b>초</div>
+    <div>시청률: <b id="ratio">0%</b></div>
+  </div>
+
+  <div class="actions">
+    <button id="btnSuspend">중단(Resume 저장)</button>
+    <button id="btnResume">Resume 요청</button>
+    <button id="btnComplete">완료 처리</button>
+  </div>
+</main>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script src="./sdk.js"></script>
+<script>
+    // TODO: YouTube API Key 설정
+  const VIDEO_ID = "aqz-KE-bpKQ";
+  let player;
+  let duration = 0;
+  let lastSent = 0;
+  let savedPosition = 0;
+
+  mover.init({
+    contentId: "youtube-poc-001",
+    contentVersion: "1.0.0"
+  });
+
+  mover.on("SESSION", (p) => {
+    document.getElementById("status").textContent = "SESSION " + p.sessionId;
+  });
+
+  mover.on("RESUME_DATA", (p) => {
+    if (p?.state?.position) {
+      savedPosition = p.state.position;
+      player.seekTo(savedPosition, true);
+    }
+  });
+
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player("player", {
+      videoId: VIDEO_ID,
+      width: "100%",
+      height: "360",
+      playerVars: { rel: 0 },
+      events: {
+        onReady: onReady,
+        onStateChange: onStateChange
+      }
+    });
+  }
+
+  function onReady(e) {
+    duration = player.getDuration();
+    mover.track("VIDEO_READY", { duration });
+  }
+
+  function onStateChange(e) {
+    if (e.data === YT.PlayerState.PLAYING) {
+      mover.track("VIDEO_PLAY", { position: player.getCurrentTime() });
+      startTracking();
+    }
+    if (e.data === YT.PlayerState.PAUSED) {
+      mover.track("VIDEO_PAUSE", { position: player.getCurrentTime() });
+    }
+    if (e.data === YT.PlayerState.ENDED) {
+      mover.track("VIDEO_ENDED", { position: duration });
+    }
+  }
+
+  function startTracking() {
+    const timer = setInterval(() => {
+      if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
+        clearInterval(timer);
+        return;
+      }
+
+      const pos = Math.floor(player.getCurrentTime());
+      const ratio = Math.round((pos / duration) * 100);
+
+      document.getElementById("time").textContent = pos;
+      document.getElementById("ratio").textContent = ratio + "%";
+
+      if (pos - lastSent >= 5) {
+        mover.track("VIDEO_PROGRESS", {
+          position: pos,
+          duration,
+          watchedRatio: ratio / 100
+        });
+        lastSent = pos;
+      }
+    }, 1000);
+  }
+
+  // 중단(Resume 저장)
+  document.getElementById("btnSuspend").onclick = () => {
+    const pos = Math.floor(player.getCurrentTime());
+    mover.suspend({
+      location: "youtube",
+      state: { position: pos }
+    });
+    alert("중단 위치 저장: " + pos + "초");
+  };
+
+  // Resume 요청
+  document.getElementById("btnResume").onclick = () => {
+    mover.requestResume();
+  };
+
+  // 완료 처리 (80% 이상 시청)
+  document.getElementById("btnComplete").onclick = () => {
+    const pos = Math.floor(player.getCurrentTime());
+    const ratio = pos / duration;
+
+    const completed = ratio >= 0.8;
+
+    mover.complete({
+      completion: completed,
+      success: completed,
+      scoreRaw: completed ? 100 : 0,
+      scoreMax: 100,
+      totalTimeMs: pos * 1000
+    });
+
+    alert(completed ? "학습 완료 처리" : "시청률 부족");
+  };
+</script>
+</body>
+</html>

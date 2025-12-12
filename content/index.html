@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>POC HTML5 콘텐츠</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="brand">MoverOn HTML5 POC</div>
+    <div class="meta">
+      <span id="sessionBadge">session: -</span>
+      <span id="statusBadge">status: DRAFT</span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <nav class="nav">
+      <button id="btnPrev" class="btn">이전</button>
+      <div class="steps">
+        <span class="step" data-step="1">1</span>
+        <span class="step" data-step="2">2</span>
+        <span class="step" data-step="3">3</span>
+      </div>
+      <button id="btnNext" class="btn">다음</button>
+    </nav>
+
+    <section id="scene1" class="scene">
+      <h1>1) 소개</h1>
+      <p>이 콘텐츠는 <b>업로드형 HTML5</b>로, LMS iframe에서 실행되며 학습 이벤트를 <b>postMessage SDK</b>로 전송합니다.</p>
+      <label class="field">
+        학습자 메모(입력값 Resume 테스트):
+        <input id="memoInput" type="text" placeholder="여기에 입력 후 다음으로 이동" />
+      </label>
+      <div class="hintbox">
+        <b>완료 기준 예시</b>
+        <ul>
+          <li>페이지 1~3 방문</li>
+          <li>퀴즈 정답 1개 이상</li>
+          <li>총 체류시간 30초 이상</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="scene2" class="scene hidden">
+      <h1>2) 동영상(목업)</h1>
+      <p>실제 mp4를 넣어도 되지만, POC에서는 간단히 “시청 진행률” 이벤트를 시뮬레이션합니다.</p>
+
+      <div class="videoMock">
+        <div class="videoBar">
+          <div id="videoProgress" class="videoProgress"></div>
+        </div>
+        <div class="videoCtl">
+          <button id="btnPlay" class="btn">재생</button>
+          <button id="btnPause" class="btn">일시정지</button>
+          <button id="btnSeek" class="btn">10초 점프</button>
+          <span id="videoLabel">0 / 60s (0%)</span>
+        </div>
+      </div>
+
+      <div class="small">
+        이벤트: <code>VIDEO_PROGRESS</code>, <code>VIEW</code>
+      </div>
+    </section>
+
+    <section id="scene3" class="scene hidden">
+      <h1>3) 퀴즈</h1>
+      <p>정답을 맞히면 점수 전송 후 완료 처리할 수 있습니다.</p>
+
+      <div class="quiz">
+        <div class="q">
+          Q. 대한민국 수도는?
+        </div>
+        <label><input type="radio" name="q1" value="부산" /> 부산</label>
+        <label><input type="radio" name="q1" value="서울" /> 서울</label>
+        <label><input type="radio" name="q1" value="대전" /> 대전</label>
+
+        <div class="quizActions">
+          <button id="btnHint" class="btn">힌트</button>
+          <button id="btnRetry" class="btn">재시도</button>
+          <button id="btnSubmit" class="btn primary">제출</button>
+        </div>
+
+        <div id="quizMsg" class="msg"></div>
+      </div>
+
+      <div class="finish">
+        <button id="btnComplete" class="btn primary">학습 완료 처리</button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <button id="btnSuspend" class="btn">중단(Resume 저장)</button>
+      <button id="btnAskResume" class="btn">Resume 불러오기</button>
+      <span class="small">콘텐츠 버전: <b id="ver">1.0.0</b></span>
+    </footer>
+  </main>
+
+  <script src="./sdk.js"></script>
+  <script>
+    // ---------- 콘텐츠 로직 ----------
+    const scenes = [1,2,3];
+    let cur = 1;
+
+    // 정책(POC용): 페이지 방문 1~3 + 정답 1개 + 총 체류 30초
+    const state = {
+      visited: {1:false,2:false,3:false},
+      totalStayMs: 0,
+      stayStart: Date.now(),
+      memo: "",
+      quiz: { attempts: 0, correct: false, usedHint: false, score: 0 },
+      video: { duration: 60, position: 0, playing: false, timer: null }
+    };
+
+    function setStepUI() {
+      document.querySelectorAll(".scene").forEach(el => el.classList.add("hidden"));
+      document.getElementById(`scene${cur}`).classList.remove("hidden");
+
+      document.querySelectorAll(".step").forEach(s => {
+        s.classList.toggle("on", Number(s.dataset.step) === cur);
+        s.classList.toggle("done", state.visited[Number(s.dataset.step)]);
+      });
+
+      document.getElementById("btnPrev").disabled = (cur === 1);
+      document.getElementById("btnNext").disabled = (cur === 3);
+    }
+
+    function markVisit(step) {
+      if (!state.visited[step]) {
+        state.visited[step] = true;
+        mover.track("VIEW", { page: step });
+      }
+    }
+
+    function leaveScene() {
+      const now = Date.now();
+      state.totalStayMs += (now - state.stayStart);
+      state.stayStart = now;
+    }
+
+    function go(step) {
+      if (!scenes.includes(step)) return;
+      leaveScene();
+      cur = step;
+      setStepUI();
+      markVisit(cur);
+
+      // 위치 저장(북마크)
+      mover.setLocation(`scene-${cur}`);
+      mover.saveState({ cur, memo: state.memo, quiz: state.quiz, video: state.video, totalStayMs: state.totalStayMs });
+    }
+
+    // ---------- SDK 초기화 ----------
+    mover.init({
+      contentId: "poc-html5-001",
+      contentVersion: "1.0.0"
+    });
+
+    mover.on("SESSION", (payload) => {
+      document.getElementById("sessionBadge").textContent = `session: ${payload.sessionId}`;
+      document.getElementById("statusBadge").textContent = `status: RUNNING`;
+    });
+
+    mover.on("RESUME_DATA", (payload) => {
+      if (!payload || !payload.state) return;
+      const s = payload.state;
+      if (typeof s.cur === "number") cur = s.cur;
+      if (s.memo) {
+        state.memo = s.memo;
+        document.getElementById("memoInput").value = s.memo;
+      }
+      if (s.quiz) state.quiz = s.quiz;
+      if (s.video) state.video = s.video;
+      if (typeof s.totalStayMs === "number") state.totalStayMs = s.totalStayMs;
+
+      setStepUI();
+      markVisit(cur);
+    });
+
+    // ---------- 네비 ----------
+    document.getElementById("btnPrev").addEventListener("click", () => go(cur - 1));
+    document.getElementById("btnNext").addEventListener("click", () => go(cur + 1));
+    document.querySelectorAll(".step").forEach(s => s.addEventListener("click", () => go(Number(s.dataset.step))));
+
+    // ---------- 메모 Resume ----------
+    document.getElementById("memoInput").addEventListener("input", (e) => {
+      state.memo = e.target.value;
+      mover.saveState({ cur, memo: state.memo, quiz: state.quiz, video: state.video, totalStayMs: state.totalStayMs });
+    });
+
+    // ---------- 비디오 목업 ----------
+    const progressEl = document.getElementById("videoProgress");
+    const labelEl = document.getElementById("videoLabel");
+
+    function renderVideo() {
+      const ratio = Math.min(1, state.video.position / state.video.duration);
+      progressEl.style.width = `${Math.round(ratio * 100)}%`;
+      labelEl.textContent = `${state.video.position} / ${state.video.duration}s (${Math.round(ratio*100)}%)`;
+    }
+
+    function tick() {
+      if (!state.video.playing) return;
+      state.video.position = Math.min(state.video.duration, state.video.position + 1);
+      renderVideo();
+      mover.track("VIDEO_PROGRESS", {
+        position: state.video.position,
+        duration: state.video.duration,
+        watchedRatio: state.video.position / state.video.duration
+      });
+
+      if (state.video.position >= state.video.duration) {
+        state.video.playing = false;
+        clearInterval(state.video.timer);
+        state.video.timer = null;
+      }
+    }
+
+    document.getElementById("btnPlay").addEventListener("click", () => {
+      state.video.playing = true;
+      if (!state.video.timer) state.video.timer = setInterval(tick, 1000);
+      mover.track("VIDEO_PLAY", { position: state.video.position });
+    });
+
+    document.getElementById("btnPause").addEventListener("click", () => {
+      state.video.playing = false;
+      mover.track("VIDEO_PAUSE", { position: state.video.position });
+    });
+
+    document.getElementById("btnSeek").addEventListener("click", () => {
+      state.video.position = Math.min(state.video.duration, state.video.position + 10);
+      renderVideo();
+      mover.track("VIDEO_SEEK", { position: state.video.position });
+    });
+
+    // ---------- 퀴즈 ----------
+    const msg = document.getElementById("quizMsg");
+    const getAnswer = () => document.querySelector('input[name="q1"]:checked')?.value ?? "";
+
+    document.getElementById("btnHint").addEventListener("click", () => {
+      state.quiz.usedHint = true;
+      mover.track("HINT", { itemId: "q1" });
+      msg.textContent = "힌트: ‘ㅅㅇ’로 시작합니다.";
+      msg.className = "msg info";
+    });
+
+    document.getElementById("btnRetry").addEventListener("click", () => {
+      state.quiz.attempts += 1;
+      document.querySelectorAll('input[name="q1"]').forEach(r => r.checked = false);
+      mover.track("RETRY", { itemId: "q1", attempts: state.quiz.attempts });
+      msg.textContent = "재시도 가능합니다. 다시 선택해 주세요.";
+      msg.className = "msg";
+    });
+
+    document.getElementById("btnSubmit").addEventListener("click", () => {
+      const ans = getAnswer();
+      state.quiz.attempts += 1;
+
+      const correct = (ans === "서울");
+      state.quiz.correct = correct;
+
+      const scoreDelta = correct ? 100 : 0;
+      state.quiz.score = Math.max(state.quiz.score, scoreDelta);
+
+      mover.track("ANSWER", {
+        itemId: "q1",
+        response: ans,
+        correct,
+        attempts: state.quiz.attempts,
+        scoreDelta
+      });
+
+      if (correct) {
+        msg.textContent = "정답입니다! (점수 100점)";
+        msg.className = "msg ok";
+        mover.track("SCORE", { scoreRaw: 100, scoreMax: 100 });
+      } else {
+        msg.textContent = "오답입니다. 재시도/힌트를 사용해 보세요.";
+        msg.className = "msg err";
+      }
+
+      mover.saveState({ cur, memo: state.memo, quiz: state.quiz, video: state.video, totalStayMs: state.totalStayMs });
+    });
+
+    // ---------- 중단/재개 ----------
+    document.getElementById("btnSuspend").addEventListener("click", () => {
+      leaveScene();
+      mover.suspend({
+        location: `scene-${cur}`,
+        state: { cur, memo: state.memo, quiz: state.quiz, video: state.video, totalStayMs: state.totalStayMs }
+      });
+      document.getElementById("statusBadge").textContent = "status: SUSPENDED";
+    });
+
+    document.getElementById("btnAskResume").addEventListener("click", () => {
+      mover.requestResume();
+    });
+
+    // ---------- 완료 처리 ----------
+    document.getElementById("btnComplete").addEventListener("click", () => {
+      leaveScene();
+      const visitedAll = Object.values(state.visited).every(v => v);
+      const hasCorrect = state.quiz.correct;
+      const enoughStay = state.totalStayMs >= 30000;
+
+      const completion = visitedAll && hasCorrect && enoughStay;
+      const success = completion && (state.quiz.score >= 60);
+
+      mover.complete({
+        completion,
+        success,
+        scoreRaw: state.quiz.score,
+        scoreMax: 100,
+        totalTimeMs: state.totalStayMs
+      });
+
+      document.getElementById("statusBadge").textContent = completion ? "status: COMPLETED" : "status: INCOMPLETE";
+      alert(completion
+        ? "완료 처리되었습니다."
+        : "완료 기준 미달입니다.\n(페이지3개 방문 + 퀴즈정답 + 총 체류 30초)");
+    });
+
+    // 시작
+    setStepUI();
+    markVisit(1);
+    renderVideo();
+  </script>
+</body>
+</html>

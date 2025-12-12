@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<!--
+  Copyright 2025 POC HTML5 Content Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>콘텐츠 생성 가이드 - POC HTML5 Content</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans KR', sans-serif;
+      background: #f5f7fa;
+      color: #2c3e50;
+      line-height: 1.6;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      font-size: 1.2em;
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .nav {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .nav h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+    }
+
+    .nav ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 10px;
+    }
+
+    .nav a {
+      display: block;
+      padding: 10px 15px;
+      background: #f8f9fa;
+      color: #667eea;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.2s;
+      border-left: 3px solid #667eea;
+    }
+
+    .nav a:hover {
+      background: #667eea;
+      color: white;
+      transform: translateX(5px);
+    }
+
+    .section {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .section h2 {
+      color: #667eea;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e9ecef;
+      font-size: 1.8em;
+    }
+
+    .section h3 {
+      color: #495057;
+      margin-top: 25px;
+      margin-bottom: 15px;
+      font-size: 1.3em;
+    }
+
+    .step {
+      background: #f8f9fa;
+      border-left: 4px solid #667eea;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 6px;
+    }
+
+    .step-number {
+      display: inline-block;
+      background: #667eea;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 30px;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .code-block {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 15px 0;
+      position: relative;
+    }
+
+    .code-block pre {
+      margin: 0;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+    }
+
+    .code-label {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      background: #667eea;
+      color: white;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .info-box {
+      background: #e7f3ff;
+      border-left: 4px solid #2196F3;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 6px;
+    }
+
+    .warning-box {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 6px;
+    }
+
+    .success-box {
+      background: #d4edda;
+      border-left: 4px solid #28a745;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 6px;
+    }
+
+    .api-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    .api-table th,
+    .api-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e9ecef;
+    }
+
+    .api-table th {
+      background: #667eea;
+      color: white;
+      font-weight: bold;
+    }
+
+    .api-table tr:hover {
+      background: #f8f9fa;
+    }
+
+    .api-table code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: #e83e8c;
+      font-family: 'Courier New', monospace;
+    }
+
+    .example-card {
+      background: #fff;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .example-card h4 {
+      color: #667eea;
+      margin-bottom: 15px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 12px 30px;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: transform 0.2s;
+      margin: 10px 5px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    }
+
+    .checklist {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .checklist li {
+      padding: 10px;
+      margin: 5px 0;
+      background: #f8f9fa;
+      border-radius: 6px;
+      position: relative;
+      padding-left: 40px;
+    }
+
+    .checklist li:before {
+      content: "✓";
+      position: absolute;
+      left: 12px;
+      color: #28a745;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: #6c757d;
+      border-top: 1px solid #e9ecef;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>📚 콘텐츠 생성 가이드</h1>
+    <p>LMS 통합 HTML5 학습 콘텐츠 제작 완벽 가이드</p>
+  </div>
+
+  <div class="container">
+    <!-- 목차 -->
+    <div class="nav">
+      <h3>📑 목차</h3>
+      <ul>
+        <li><a href="#quick-start">빠른 시작</a></li>
+        <li><a href="#structure">프로젝트 구조</a></li>
+        <li><a href="#sdk-api">SDK API 레퍼런스</a></li>
+        <li><a href="#examples">예제 코드</a></li>
+        <li><a href="#best-practices">베스트 프랙티스</a></li>
+        <li><a href="#testing">테스트 가이드</a></li>
+        <li><a href="#troubleshooting">문제 해결</a></li>
+        <li><a href="#checklist">체크리스트</a></li>
+      </ul>
+    </div>
+
+    <!-- 빠른 시작 -->
+    <section id="quick-start" class="section">
+      <h2>🚀 빠른 시작</h2>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>폴더 생성</strong>
+        <p>새로운 콘텐츠를 위한 폴더를 생성합니다.</p>
+        <div class="code-block">
+          <span class="code-label">Terminal</span>
+          <pre>mkdir my-learning-content
+cd my-learning-content</pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>SDK 파일 복사</strong>
+        <p>기존 콘텐츠에서 SDK 파일을 복사합니다.</p>
+        <div class="code-block">
+          <span class="code-label">Terminal</span>
+          <pre>cp ../content/sdk.js ./sdk.js</pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-number">3</span>
+        <strong>index.html 생성</strong>
+        <p>기본 HTML 파일을 생성합니다.</p>
+        <div class="code-block">
+          <span class="code-label">index.html</span>
+          <pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="ko"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;나의 학습 콘텐츠&lt;/title&gt;
+  &lt;link rel="stylesheet" href="./style.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;나의 학습 콘텐츠&lt;/h1&gt;
+
+  &lt;!-- SDK 로드 --&gt;
+  &lt;script src="./sdk.js"&gt;&lt;/script&gt;
+  &lt;script src="./main.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-number">4</span>
+        <strong>main.js 생성</strong>
+        <p>SDK를 초기화하고 이벤트를 처리하는 JavaScript 파일을 생성합니다.</p>
+        <div class="code-block">
+          <span class="code-label">main.js</span>
+          <pre>// SDK 초기화
+mover.init({
+  contentId: "my-content-001",
+  contentVersion: "1.0.0"
+});
+
+// 세션 정보 수신
+mover.on("SESSION", (payload) => {
+  console.log("Session ID:", payload.sessionId);
+  // 세션 정보를 UI에 표시
+});
+
+// Resume 데이터 수신
+mover.on("RESUME_DATA", (payload) => {
+  if (payload.state) {
+    // 저장된 상태로 복원
+    console.log("Resume data:", payload);
+  }
+});
+
+// 학습 이벤트 전송
+mover.track("VIEW", { page: 1 });
+
+// 완료 처리
+function completeContent() {
+  mover.complete({
+    completion: true,
+    success: true,
+    scoreRaw: 100,
+    scoreMax: 100,
+    totalTimeMs: 60000
+  });
+}</pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-number">5</span>
+        <strong>manifest.json 생성</strong>
+        <p>콘텐츠 메타데이터 파일을 생성합니다.</p>
+        <div class="code-block">
+          <span class="code-label">manifest.json</span>
+          <pre>{
+  "contentId": "my-content-001",
+  "version": "1.0.0",
+  "type": "HTML5",
+  "entry": "index.html",
+  "supports": [
+    "POST_MESSAGE_SDK",
+    "RESUME",
+    "SCORE",
+    "COMPLETE"
+  ]
+}</pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-number">6</span>
+        <strong>플레이어에 등록</strong>
+        <p>player/player.html에 콘텐츠를 추가합니다.</p>
+        <div class="code-block">
+          <span class="code-label">player/player.html</span>
+          <pre>&lt;div class="nav-bar"&gt;
+  &lt;label&gt;📚 샘플 콘텐츠:&lt;/label&gt;
+  &lt;!-- 기존 버튼들... --&gt;
+  &lt;button class="content-btn" data-src="../my-learning-content/index.html"&gt;
+    나의 콘텐츠
+  &lt;/button&gt;
+&lt;/div&gt;</pre>
+        </div>
+      </div>
+
+      <div class="success-box">
+        <strong>✅ 완료!</strong> 이제 플레이어에서 콘텐츠를 테스트할 수 있습니다.
+      </div>
+    </section>
+
+    <!-- 프로젝트 구조 -->
+    <section id="structure" class="section">
+      <h2>🏗️ 프로젝트 구조</h2>
+
+      <h3>권장 폴더 구조</h3>
+      <div class="code-block">
+        <span class="code-label">Structure</span>
+        <pre>my-learning-content/
+├── index.html          # 메인 HTML 파일
+├── sdk.js              # PostMessage SDK (필수)
+├── main.js             # 콘텐츠 로직
+├── style.css           # 스타일시트
+├── manifest.json       # 콘텐츠 메타데이터
+├── assets/             # 리소스 폴더
+│   ├── images/
+│   ├── videos/
+│   └── documents/
+└── README.md           # 콘텐츠 설명</pre>
+      </div>
+
+      <h3>필수 파일</h3>
+      <ul class="checklist">
+        <li><strong>index.html</strong> - 콘텐츠의 진입점</li>
+        <li><strong>sdk.js</strong> - LMS 통신을 위한 SDK</li>
+        <li><strong>manifest.json</strong> - 콘텐츠 메타데이터</li>
+      </ul>
+
+      <h3>선택 파일</h3>
+      <ul class="checklist">
+        <li><strong>style.css</strong> - 스타일 정의</li>
+        <li><strong>main.js</strong> - 비즈니스 로직 분리</li>
+        <li><strong>assets/</strong> - 이미지, 비디오 등 리소스</li>
+      </ul>
+    </section>
+
+    <!-- SDK API -->
+    <section id="sdk-api" class="section">
+      <h2>📡 SDK API 레퍼런스</h2>
+
+      <h3>초기화</h3>
+      <div class="code-block">
+        <span class="code-label">JavaScript</span>
+        <pre>mover.init({
+  contentId: "unique-content-id",      // 콘텐츠 고유 ID
+  contentVersion: "1.0.0"              // 버전 정보
+});</pre>
+      </div>
+
+      <div class="info-box">
+        <strong>💡 참고:</strong> <code>init()</code>은 SDK 로드 후 가장 먼저 호출해야 합니다.
+      </div>
+
+      <h3>이벤트 수신</h3>
+      <table class="api-table">
+        <thead>
+          <tr>
+            <th>메서드</th>
+            <th>설명</th>
+            <th>예제</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>mover.on(type, callback)</code></td>
+            <td>플레이어로부터 이벤트 수신</td>
+            <td><code>mover.on("SESSION", fn)</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>수신 가능한 이벤트</h4>
+      <div class="code-block">
+        <span class="code-label">JavaScript</span>
+        <pre>// 세션 정보 수신
+mover.on("SESSION", (payload) => {
+  console.log("Session ID:", payload.sessionId);
+});
+
+// Resume 데이터 수신
+mover.on("RESUME_DATA", (payload) => {
+  const { location, state } = payload;
+  // 저장된 위치와 상태로 복원
+  restoreContent(location, state);
+});</pre>
+      </div>
+
+      <h3>이벤트 전송</h3>
+      <table class="api-table">
+        <thead>
+          <tr>
+            <th>메서드</th>
+            <th>설명</th>
+            <th>파라미터</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>track()</code></td>
+            <td>학습 이벤트 전송</td>
+            <td><code>eventType, data</code></td>
+          </tr>
+          <tr>
+            <td><code>setLocation()</code></td>
+            <td>현재 위치 저장</td>
+            <td><code>location</code></td>
+          </tr>
+          <tr>
+            <td><code>saveState()</code></td>
+            <td>상태 저장</td>
+            <td><code>state</code></td>
+          </tr>
+          <tr>
+            <td><code>suspend()</code></td>
+            <td>중단 및 저장</td>
+            <td><code>{ location, state }</code></td>
+          </tr>
+          <tr>
+            <td><code>requestResume()</code></td>
+            <td>Resume 요청</td>
+            <td>없음</td>
+          </tr>
+          <tr>
+            <td><code>complete()</code></td>
+            <td>완료 처리</td>
+            <td><code>{ completion, success, ... }</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>주요 API 상세 설명</h3>
+
+      <h4>1. track() - 이벤트 추적</h4>
+      <div class="code-block">
+        <span class="code-label">JavaScript</span>
+        <pre>// 페이지 조회
+mover.track("VIEW", { page: 1 });
+
+// 비디오 재생
+mover.track("VIDEO_PLAY", { position: 10.5 });
+
+// 퀴즈 답변
+mover.track("ANSWER", {
+  itemId: "q1",
+  response: "서울",
+  correct: true,
+  attempts: 1,
+  scoreDelta: 100
+});
+
+// 점수 기록
+mover.track("SCORE", { scoreRaw: 85, scoreMax: 100 });</pre>
+      </div>
+
+      <h4>2. setLocation() - 위치 저장</h4>
+      <div class="code-block">
+        <span class="code-label">JavaScript</span>
+        <pre>// 현재 페이지/씬 저장
+mover.setLocation("scene-2");
+mover.setLocation("page-5");
+mover.setLocation("chapter-3-section-2");</pre>
+      </div>
+
+      <h4>3. saveState() - 상태 저장</h4>
+      <div class="code-block">
+        <span class="code-label">JavaScript</span>
+        <pre>// 학습 상태 저장 (자동 Resume용)
+mover.saveState({
+  currentPage: 3,
+  score: 75,
+  answers: ["A", "B", "C"],
+  videoPosition: 120.5,
+  completedSections: [1, 2, 3]
+});</pre>
+      </div>
+
+      <h4>4. suspend() - 중단 및 저장</h4>
+      <div class="code-block">
+        <span class="code-label">JavaScript</span>
+        <pre>// 학습 중단 시 호출
+mover.suspend({
+  location: "page-5",
+  state: {
+    progress: 60,
+    lastActivity: Date.now(),
+    userInputs: { ... }
+  }
+});</pre>
+      </div>
+
+      <h4>5. complete() - 완료 처리</h4>
+      <div class="code-block">
+        <span class="code-label">JavaScript</span>
+        <pre>mover.complete({
+  completion: true,        // 완료 여부 (boolean)
+  success: true,          // 성공 여부 (boolean)
+  scoreRaw: 85,          // 획득 점수
+  scoreMax: 100,         // 만점
+  totalTimeMs: 180000,   // 총 학습 시간 (밀리초)
+  detail: {              // 추가 정보 (선택)
+    attempts: 2,
+    hintsUsed: 1
+  }
+});</pre>
+      </div>
+    </section>
+
+    <!-- 예제 코드 -->
+    <section id="examples" class="section">
+      <h2>💡 예제 코드</h2>
+
+      <div class="example-card">
+        <h4>예제 1: 간단한 페이지 기반 콘텐츠</h4>
+        <div class="code-block">
+          <span class="code-label">JavaScript</span>
+          <pre>let currentPage = 1;
+const totalPages = 5;
+const visitedPages = new Set();
+
+// SDK 초기화
+mover.init({
+  contentId: "simple-page-content",
+  contentVersion: "1.0.0"
+});
+
+// 세션 수신
+mover.on("SESSION", (payload) => {
+  console.log("Session started:", payload.sessionId);
+});
+
+// Resume 데이터 수신
+mover.on("RESUME_DATA", (payload) => {
+  if (payload.state) {
+    currentPage = payload.state.currentPage || 1;
+    visitedPages = new Set(payload.state.visitedPages || []);
+    showPage(currentPage);
+  }
+});
+
+// 페이지 이동
+function goToPage(pageNum) {
+  currentPage = pageNum;
+  visitedPages.add(pageNum);
+
+  // 위치 저장
+  mover.setLocation(`page-${pageNum}`);
+
+  // 상태 저장
+  mover.saveState({
+    currentPage: pageNum,
+    visitedPages: Array.from(visitedPages)
+  });
+
+  // 이벤트 전송
+  mover.track("PAGE_VIEW", { page: pageNum });
+
+  showPage(pageNum);
+}
+
+// 완료 처리
+function checkCompletion() {
+  const allVisited = visitedPages.size === totalPages;
+
+  if (allVisited) {
+    mover.complete({
+      completion: true,
+      success: true,
+      scoreRaw: 100,
+      scoreMax: 100,
+      totalTimeMs: Date.now() - startTime
+    });
+    alert("학습을 완료했습니다!");
+  }
+}</pre>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <h4>예제 2: 비디오 학습 콘텐츠</h4>
+        <div class="code-block">
+          <span class="code-label">JavaScript</span>
+          <pre>const video = document.getElementById("myVideo");
+let watchedSeconds = 0;
+let lastPosition = 0;
+
+// SDK 초기화
+mover.init({
+  contentId: "video-learning-001",
+  contentVersion: "1.0.0"
+});
+
+// Resume 데이터로 위치 복원
+mover.on("RESUME_DATA", (payload) => {
+  if (payload.state?.position) {
+    video.currentTime = payload.state.position;
+  }
+});
+
+// 비디오 이벤트 추적
+video.addEventListener("play", () => {
+  mover.track("VIDEO_PLAY", { position: video.currentTime });
+});
+
+video.addEventListener("pause", () => {
+  mover.track("VIDEO_PAUSE", { position: video.currentTime });
+  saveProgress();
+});
+
+video.addEventListener("timeupdate", () => {
+  // 실제 시청 시간 계산
+  if (video.currentTime > lastPosition) {
+    watchedSeconds += (video.currentTime - lastPosition);
+  }
+  lastPosition = video.currentTime;
+
+  // 주기적으로 상태 저장 (10초마다)
+  if (Math.floor(video.currentTime) % 10 === 0) {
+    saveProgress();
+  }
+});
+
+function saveProgress() {
+  mover.saveState({
+    position: video.currentTime,
+    watchedSeconds: watchedSeconds
+  });
+}
+
+// 완료 처리 (80% 이상 시청)
+video.addEventListener("ended", () => {
+  const watchRatio = watchedSeconds / video.duration;
+  const completed = watchRatio >= 0.8;
+
+  mover.complete({
+    completion: completed,
+    success: completed,
+    scoreRaw: completed ? 100 : 0,
+    scoreMax: 100,
+    totalTimeMs: watchedSeconds * 1000
+  });
+});</pre>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <h4>예제 3: 퀴즈 콘텐츠</h4>
+        <div class="code-block">
+          <span class="code-label">JavaScript</span>
+          <pre>const quiz = {
+  questions: [
+    { id: "q1", answer: "A", score: 25 },
+    { id: "q2", answer: "B", score: 25 },
+    { id: "q3", answer: "C", score: 25 },
+    { id: "q4", answer: "D", score: 25 }
+  ],
+  userAnswers: {},
+  totalScore: 0
+};
+
+// SDK 초기화
+mover.init({
+  contentId: "quiz-content-001",
+  contentVersion: "1.0.0"
+});
+
+// Resume으로 답변 복원
+mover.on("RESUME_DATA", (payload) => {
+  if (payload.state) {
+    quiz.userAnswers = payload.state.userAnswers || {};
+    quiz.totalScore = payload.state.totalScore || 0;
+    restoreAnswers();
+  }
+});
+
+// 답변 제출
+function submitAnswer(questionId, userAnswer) {
+  const question = quiz.questions.find(q => q.id === questionId);
+  const correct = (userAnswer === question.answer);
+  const scoreDelta = correct ? question.score : 0;
+
+  quiz.userAnswers[questionId] = userAnswer;
+  if (correct) {
+    quiz.totalScore += scoreDelta;
+  }
+
+  // 답변 이벤트 전송
+  mover.track("ANSWER", {
+    itemId: questionId,
+    response: userAnswer,
+    correct: correct,
+    attempts: 1,
+    scoreDelta: scoreDelta
+  });
+
+  // 점수 이벤트 전송
+  mover.track("SCORE", {
+    scoreRaw: quiz.totalScore,
+    scoreMax: 100
+  });
+
+  // 상태 저장
+  mover.saveState({
+    userAnswers: quiz.userAnswers,
+    totalScore: quiz.totalScore
+  });
+
+  // 모든 문제 풀었는지 확인
+  if (Object.keys(quiz.userAnswers).length === quiz.questions.length) {
+    completeQuiz();
+  }
+}
+
+function completeQuiz() {
+  const passed = quiz.totalScore >= 60; // 60점 이상 합격
+
+  mover.complete({
+    completion: true,
+    success: passed,
+    scoreRaw: quiz.totalScore,
+    scoreMax: 100,
+    totalTimeMs: Date.now() - startTime
+  });
+
+  alert(passed ? "합격입니다!" : "불합격입니다. 다시 시도해주세요.");
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- 베스트 프랙티스 -->
+    <section id="best-practices" class="section">
+      <h2>⭐ 베스트 프랙티스</h2>
+
+      <h3>1. SDK 초기화 타이밍</h3>
+      <div class="info-box">
+        <strong>✅ 권장:</strong> SDK 스크립트 로드 직후 <code>mover.init()</code> 호출
+      </div>
+      <div class="code-block">
+        <span class="code-label">HTML</span>
+        <pre>&lt;script src="./sdk.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  // SDK 로드 직후 초기화
+  mover.init({ contentId: "...", contentVersion: "..." });
+&lt;/script&gt;</pre>
+      </div>
+
+      <h3>2. 상태 저장 주기</h3>
+      <div class="warning-box">
+        <strong>⚠️ 주의:</strong> 너무 자주 저장하면 성능 저하 발생
+      </div>
+      <div class="code-block">
+        <span class="code-label">JavaScript</span>
+        <pre>// ❌ 나쁜 예: 매 초마다 저장
+setInterval(() => mover.saveState(state), 1000);
+
+// ✅ 좋은 예: 의미있는 변경 시에만 저장
+function onUserAction() {
+  // 사용자 액션 발생 시에만 저장
+  mover.saveState(state);
+}
+
+// ✅ 좋은 예: 디바운스 사용
+let saveTimeout;
+function saveStateDebounced() {
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => {
+    mover.saveState(state);
+  }, 2000); // 2초 디바운스
+}</pre>
+      </div>
+
+      <h3>3. 완료 기준 명확히 정의</h3>
+      <div class="code-block">
+        <span class="code-label">JavaScript</span>
+        <pre>function checkCompletion() {
+  // 명확한 완료 기준 정의
+  const criteria = {
+    allPagesVisited: visitedPages.size === totalPages,
+    quizPassed: score >= 60,
+    minTimeSpent: totalTime >= 30000, // 30초
+    videoWatched: videoProgress >= 0.8 // 80%
+  };
+
+  // 모든 기준 충족 확인
+  const completed = Object.values(criteria).every(v => v);
+
+  return completed;
+}</pre>
+      </div>
+
+      <h3>4. 에러 처리</h3>
+      <div class="code-block">
+        <span class="code-label">JavaScript</span>
+        <pre>// Resume 데이터 검증
+mover.on("RESUME_DATA", (payload) => {
+  try {
+    if (!payload || !payload.state) {
+      console.log("No resume data available");
+      return;
+    }
+
+    // 데이터 유효성 검사
+    const state = payload.state;
+    if (typeof state.currentPage === "number" &&
+        state.currentPage >= 1 &&
+        state.currentPage <= totalPages) {
+      currentPage = state.currentPage;
+    }
+
+    restoreContent(state);
+  } catch (error) {
+    console.error("Resume failed:", error);
+    // 기본 상태로 시작
+    startFromBeginning();
+  }
+});</pre>
+      </div>
+
+      <h3>5. 이벤트 네이밍 규칙</h3>
+      <div class="info-box">
+        <strong>💡 권장 네이밍:</strong> 대문자와 언더스코어 사용 (예: <code>VIDEO_PLAY</code>, <code>PAGE_VIEW</code>)
+      </div>
+      <div class="code-block">
+        <span class="code-label">JavaScript</span>
+        <pre>// ✅ 좋은 예
+mover.track("VIDEO_PLAY", { ... });
+mover.track("QUIZ_SUBMIT", { ... });
+mover.track("PAGE_VIEW", { ... });
+
+// ❌ 나쁜 예
+mover.track("videoPlay", { ... });
+mover.track("quiz-submit", { ... });
+mover.track("pageview", { ... });</pre>
+      </div>
+
+      <h3>6. 보안 고려사항</h3>
+      <div class="warning-box">
+        <strong>⚠️ 중요:</strong> 프로덕션 환경에서는 반드시 origin 검증 필요
+      </div>
+      <div class="code-block">
+        <span class="code-label">JavaScript</span>
+        <pre>// sdk.js 수정 (프로덕션용)
+const ALLOWED_ORIGINS = [
+  "https://lms.example.com",
+  "https://learning.example.com"
+];
+
+window.addEventListener("message", (e) => {
+  // Origin 검증
+  if (!ALLOWED_ORIGINS.includes(e.origin)) {
+    console.warn("Unauthorized origin:", e.origin);
+    return;
+  }
+
+  // 메시지 처리
+  handleMessage(e.data);
+});</pre>
+      </div>
+    </section>
+
+    <!-- 테스트 가이드 -->
+    <section id="testing" class="section">
+      <h2>🧪 테스트 가이드</h2>
+
+      <h3>테스트 체크리스트</h3>
+      <ul class="checklist">
+        <li>SDK 초기화가 정상적으로 동작하는가?</li>
+        <li>세션 정보를 올바르게 수신하는가?</li>
+        <li>모든 학습 이벤트가 전송되는가?</li>
+        <li>Resume 기능이 정상 동작하는가?</li>
+        <li>완료 기준이 올바르게 판정되는가?</li>
+        <li>브라우저 콘솔에 에러가 없는가?</li>
+        <li>플레이어 로그에 이벤트가 기록되는가?</li>
+      </ul>
+
+      <h3>테스트 시나리오</h3>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>기본 동작 테스트</strong>
+        <ul style="margin-top: 10px; margin-left: 20px;">
+          <li>플레이어에서 콘텐츠 로드</li>
+          <li>개발자 도구(F12) 콘솔 확인</li>
+          <li>세션 ID가 표시되는지 확인</li>
+          <li>콘텐츠가 정상 렌더링되는지 확인</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>이벤트 추적 테스트</strong>
+        <ul style="margin-top: 10px; margin-left: 20px;">
+          <li>페이지 이동, 버튼 클릭 등 액션 수행</li>
+          <li>플레이어 로그 패널에서 이벤트 확인</li>
+          <li>이벤트 데이터가 올바른지 검증</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <span class="step-number">3</span>
+        <strong>Resume 기능 테스트</strong>
+        <ul style="margin-top: 10px; margin-left: 20px;">
+          <li>콘텐츠 중간까지 진행</li>
+          <li>"중단(Resume 저장)" 버튼 클릭</li>
+          <li>페이지 새로고침 (F5)</li>
+          <li>"Resume 불러오기" 버튼 클릭</li>
+          <li>저장된 위치로 복원되는지 확인</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <span class="step-number">4</span>
+        <strong>완료 처리 테스트</strong>
+        <ul style="margin-top: 10px; margin-left: 20px;">
+          <li>완료 기준 미충족 상태에서 완료 버튼 클릭</li>
+          <li>미완료 메시지 확인</li>
+          <li>완료 기준 충족 후 다시 시도</li>
+          <li>완료 처리 성공 확인</li>
+          <li>플레이어 로그에서 COMPLETE 이벤트 확인</li>
+        </ul>
+      </div>
+
+      <h3>디버깅 팁</h3>
+      <div class="code-block">
+        <span class="code-label">JavaScript</span>
+        <pre>// 콘솔 로그 추가
+console.log("SDK initialized:", mover);
+console.log("Current state:", state);
+
+// 이벤트 전송 확인
+const originalTrack = mover.track;
+mover.track = function(eventType, data) {
+  console.log("Track event:", eventType, data);
+  return originalTrack.call(this, eventType, data);
+};
+
+// PostMessage 모니터링
+window.addEventListener("message", (e) => {
+  console.log("Received message:", e.data);
+});</pre>
+      </div>
+    </section>
+
+    <!-- 문제 해결 -->
+    <section id="troubleshooting" class="section">
+      <h2>🔧 문제 해결</h2>
+
+      <h3>자주 발생하는 문제</h3>
+
+      <div class="example-card">
+        <h4>❌ 문제: SDK가 정의되지 않음 (mover is not defined)</h4>
+        <p><strong>원인:</strong> sdk.js가 로드되기 전에 mover 객체 사용</p>
+        <p><strong>해결:</strong></p>
+        <div class="code-block">
+          <span class="code-label">HTML</span>
+          <pre>&lt;!-- ✅ 올바른 순서 --&gt;
+&lt;script src="./sdk.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  mover.init({ ... }); // sdk.js 로드 후 사용
+&lt;/script&gt;</pre>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <h4>❌ 문제: 이벤트가 플레이어에 전송되지 않음</h4>
+        <p><strong>원인:</strong> 콘텐츠가 iframe 내에서 실행되지 않음</p>
+        <p><strong>해결:</strong> 반드시 플레이어(player.html)를 통해 콘텐츠 실행</p>
+      </div>
+
+      <div class="example-card">
+        <h4>❌ 문제: Resume 데이터가 복원되지 않음</h4>
+        <p><strong>원인:</strong> RESUME_DATA 이벤트 리스너 미등록</p>
+        <p><strong>해결:</strong></p>
+        <div class="code-block">
+          <span class="code-label">JavaScript</span>
+          <pre>// init() 호출 후 즉시 리스너 등록
+mover.init({ ... });
+
+mover.on("RESUME_DATA", (payload) => {
+  // Resume 데이터 처리
+  restoreState(payload.state);
+});</pre>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <h4>❌ 문제: 완료 처리가 되지 않음</h4>
+        <p><strong>원인:</strong> complete() 파라미터 누락 또는 잘못된 값</p>
+        <p><strong>해결:</strong></p>
+        <div class="code-block">
+          <span class="code-label">JavaScript</span>
+          <pre>// ✅ 모든 필수 파라미터 포함
+mover.complete({
+  completion: true,      // boolean (필수)
+  success: true,         // boolean (필수)
+  scoreRaw: 100,        // number (필수)
+  scoreMax: 100,        // number (필수)
+  totalTimeMs: 60000    // number (필수)
+});</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- 체크리스트 -->
+    <section id="checklist" class="section">
+      <h2>✅ 배포 전 체크리스트</h2>
+
+      <h3>필수 항목</h3>
+      <ul class="checklist">
+        <li>sdk.js 파일이 포함되어 있는가?</li>
+        <li>manifest.json이 올바르게 작성되었는가?</li>
+        <li>mover.init()이 호출되는가?</li>
+        <li>세션 정보를 수신하는가?</li>
+        <li>주요 이벤트가 전송되는가?</li>
+        <li>완료 처리가 정상 동작하는가?</li>
+      </ul>
+
+      <h3>권장 항목</h3>
+      <ul class="checklist">
+        <li>Resume 기능이 구현되어 있는가?</li>
+        <li>상태 저장이 적절히 이루어지는가?</li>
+        <li>에러 처리가 되어 있는가?</li>
+        <li>브라우저 호환성 테스트를 했는가?</li>
+        <li>모바일 반응형이 적용되었는가?</li>
+        <li>접근성(Accessibility)을 고려했는가?</li>
+      </ul>
+
+      <h3>보안 항목</h3>
+      <ul class="checklist">
+        <li>PostMessage origin 검증이 되어 있는가?</li>
+        <li>사용자 입력 검증이 되어 있는가?</li>
+        <li>XSS 취약점이 없는가?</li>
+        <li>민감한 정보가 노출되지 않는가?</li>
+      </ul>
+    </section>
+
+    <!-- 추가 리소스 -->
+    <section class="section">
+      <h2>📚 추가 리소스</h2>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+        <a href="README.md" class="btn">📖 README 문서</a>
+        <a href="player/player.html" class="btn">🎮 플레이어 실행</a>
+        <a href="content/index.html" class="btn-secondary btn">📝 샘플 콘텐츠</a>
+        <a href="index.html" class="btn-secondary btn">🏠 프로젝트 홈</a>
+      </div>
+
+      <div class="info-box" style="margin-top: 30px;">
+        <strong>💡 도움이 필요하신가요?</strong><br>
+        샘플 콘텐츠 폴더들을 참고하세요:
+        <ul style="margin-top: 10px; margin-left: 20px;">
+          <li><code>content/</code> - 멀티 씬 학습 콘텐츠</li>
+          <li><code>poc-mp4-html5/</code> - MP4 비디오 학습</li>
+          <li><code>poc-youtube-html5/</code> - YouTube 비디오 학습</li>
+          <li><code>poc-pdf-html5/</code> - PDF 학습</li>
+          <li><code>moveron_html5_sample/</code> - 간단한 샘플</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <div class="footer">
+    <p>POC HTML5 Content - 콘텐츠 생성 가이드</p>
+    <p style="margin-top: 15px; font-size: 1em;"><strong>Developed by MoverOn Co., Ltd.</strong></p>
+    <p style="margin-top: 5px; font-size: 0.9em;">Innovating Learning Experience</p>
+    <p style="margin-top: 10px; font-size: 0.85em;">
+      <a href="https://www.moveron.co.kr/" target="_blank" style="color: #667eea; text-decoration: none;">www.moveron.co.kr</a> |
+      <a href="mailto:contact@moveron.co.kr" style="color: #667eea; text-decoration: none;">contact@moveron.co.kr</a>
+    </p>
+    <p style="margin-top: 10px; font-size: 0.85em; color: #999;">Licensed under Apache License 2.0 | © 2025 MoverOn Co., Ltd.</p>
+  </div>
+</body>
+</html>
+

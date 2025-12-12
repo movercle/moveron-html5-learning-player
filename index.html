@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<!--
+  Copyright 2025 POC HTML5 Content Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POC HTML5 Content - 프로젝트 소개</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #667eea;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        ul {
+            color: #666;
+            line-height: 1.8;
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .feature-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+
+        .feature-item strong {
+            color: #667eea;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #e83e8c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 POC HTML5 Content</h1>
+        <p>LMS 통합을 위한 HTML5 기반 인터랙티브 학습 콘텐츠 POC 프로젝트입니다.</p>
+
+        <div class="highlight">
+            <strong>📌 이 프로젝트는 무엇인가요?</strong>
+            <p style="margin-top: 10px;">
+                이 프로젝트는 학습 관리 시스템(LMS)과 통합 가능한 HTML5 학습 콘텐츠의 개념 증명(POC)입니다. 
+                PostMessage API를 사용하여 콘텐츠와 LMS 플레이어 간의 양방향 통신을 구현합니다.
+            </p>
+        </div>
+
+        <h2>✨ 주요 기능</h2>
+        <div class="features">
+            <div class="feature-item">
+                <strong>📖 멀티 페이지</strong><br>
+                3개의 학습 씬으로 구성
+            </div>
+            <div class="feature-item">
+                <strong>💾 이어보기</strong><br>
+                학습 진행 상태 저장/복원
+            </div>
+            <div class="feature-item">
+                <strong>🎥 비디오 플레이어</strong><br>
+                진행률 추적 기능
+            </div>
+            <div class="feature-item">
+                <strong>📝 퀴즈</strong><br>
+                인터랙티브 평가 기능
+            </div>
+            <div class="feature-item">
+                <strong>📊 학습 분석</strong><br>
+                이벤트 추적 및 로깅
+            </div>
+            <div class="feature-item">
+                <strong>✅ 완료 기준</strong><br>
+                자동 완료 판정 시스템
+            </div>
+        </div>
+
+        <h2>🏗️ 프로젝트 구조</h2>
+        <ul>
+            <li><code>content/index.html</code> - 메인 학습 콘텐츠</li>
+            <li><code>content/sdk.js</code> - LMS 통신용 PostMessage SDK</li>
+            <li><code>player/player.html</code> - LMS 플레이어 시뮬레이터</li>
+            <li><code>content/style.css</code> - UI 스타일링</li>
+        </ul>
+
+        <h2>🚀 시작하기</h2>
+        <p>아래 버튼을 클릭하여 LMS 플레이어에서 학습 콘텐츠를 실행하거나, 가이드를 참고하여 새로운 콘텐츠를 만들어보세요.</p>
+
+        <a href="player/player.html" class="btn">▶️ 플레이어 실행하기</a>
+        <a href="content-creation-guide.html" class="btn" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">📚 콘텐츠 생성 가이드</a>
+
+        <div class="highlight" style="margin-top: 30px;">
+            <strong>💡 개발자 팁</strong>
+            <p style="margin-top: 10px;">
+                브라우저 개발자 도구(F12)의 콘솔을 열어두면 LMS와 콘텐츠 간의 통신 메시지를 실시간으로 확인할 수 있습니다.
+            </p>
+        </div>
+
+        <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid #e9ecef; text-align: center; color: #6c757d;">
+            <p style="margin-bottom: 5px;">Developed by <strong>MoverOn Co., Ltd.</strong></p>
+            <p style="font-size: 0.9em;">Innovating Learning Experience</p>
+            <p style="font-size: 0.85em; margin-top: 10px;">
+                <a href="https://www.moveron.co.kr/" target="_blank" style="color: #667eea; text-decoration: none;">www.moveron.co.kr</a> |
+                <a href="mailto:contact@moveron.co.kr" style="color: #667eea; text-decoration: none;">contact@moveron.co.kr</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+

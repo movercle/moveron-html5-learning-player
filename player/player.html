@@ -1,0 +1,177 @@
+<!doctype html>
+<!--
+  Copyright 2025 POC HTML5 Content Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>POC Player (iframe wrapper)</title>
+  <style>
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", sans-serif; background:#0b0c10; color:#fff; }
+    .top { padding: 12px 16px; display:flex; justify-content:space-between; align-items:center; background:#111; border-bottom:1px solid #222; }
+    .panel { display:flex; gap: 12px; align-items:center; }
+    .chip { font-size:12px; color:#bbb; }
+    .wrap { display:grid; grid-template-columns: 1fr 420px; gap: 12px; padding: 12px; }
+    iframe { width:100%; height: calc(100vh - 120px); border:0; border-radius: 12px; background:#fff; }
+    .log { height: calc(100vh - 120px); border-radius: 12px; background:#111; border:1px solid #222; overflow:auto; padding: 10px; font-size: 12px; }
+    .row { border-bottom:1px dashed #2a2a2a; padding: 8px 0; }
+    .k { color:#8ab4ff; }
+    .btn { padding: 8px 10px; border:1px solid #333; background:#111; color:#fff; border-radius: 10px; cursor:pointer; transition: all 0.2s; }
+    .btn:hover { background:#222; border-color:#555; }
+    .nav-bar { padding: 12px 16px; background:#0d0e12; border-bottom:1px solid #222; display:flex; gap: 8px; align-items:center; flex-wrap: wrap; }
+    .nav-bar label { font-size: 13px; color: #999; margin-right: 8px; }
+    .content-btn { padding: 8px 16px; border:1px solid #333; background:#1a1b1f; color:#fff; border-radius: 8px; cursor:pointer; font-size: 13px; transition: all 0.2s; }
+    .content-btn:hover { background:#2a2b2f; border-color:#555; }
+    .content-btn.active { background:#667eea; border-color:#667eea; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div class="panel">
+      <b>POC Player</b>
+      <span class="chip" id="sid">session: -</span>
+    </div>
+    <div class="panel">
+      <button class="btn" id="btnClear">로그지우기</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <label>📚 샘플 콘텐츠:</label>
+    <button class="content-btn" data-src="../content/index.html">기본 콘텐츠</button>
+    <button class="content-btn" data-src="../moveron_html5_sample/index.html">MoverOn 샘플</button>
+    <button class="content-btn active" data-src="../poc-mp4-html5/index.html">POC MP4</button>
+    <button class="content-btn" data-src="../poc-youtube-html5/index.html">POC YouTube</button>
+    <button class="content-btn" data-src="../poc-pdf-html5/index.html">POC pdf</button>
+  </div>
+
+  <div class="wrap">
+    <!-- content/index.html 을 로딩하세요 -->
+    <iframe id="frame" src="../poc-mp4-html5/index.html"></iframe>
+
+    <div class="log" id="log"></div>
+  </div>
+
+  <script>
+    const CHANNEL = "MOVERON_POC";
+    const frame = document.getElementById("frame");
+    const logEl = document.getElementById("log");
+
+    const sessionId = "S-" + Math.random().toString(16).slice(2);
+    document.getElementById("sid").textContent = "session: " + sessionId;
+
+    // POC용 Resume 저장소(실제로는 DB/Redis 등에 저장)
+    const resumeStore = {
+      location: null,
+      state: null
+    };
+
+    function addLog(line, obj) {
+      const div = document.createElement("div");
+      div.className = "row";
+      div.innerHTML = `<div><span class="k">${line}</span></div><pre style="white-space:pre-wrap;margin:6px 0 0;color:#ccc;">${obj ? escapeHtml(JSON.stringify(obj, null, 2)) : ""}</pre>`;
+      logEl.prepend(div);
+    }
+    function escapeHtml(s){ return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
+
+    // 자체 API 목업(POC): 실제 구현 시 fetch로 교체
+    async function trackingApi(type, payload) {
+      // 예) await fetch("/api/learning/events", {method:"POST", headers:{...}, body: JSON.stringify(...)})
+      addLog("API -> " + type, payload);
+      return { ok: true };
+    }
+
+    // 콘텐츠로 메시지 보내기
+    function postToContent(type, payload) {
+      frame.contentWindow?.postMessage({ channel: CHANNEL, type, payload }, "*");
+    }
+
+    window.addEventListener("message", async (e) => {
+      const msg = e.data;
+      if (!msg || msg.channel !== CHANNEL) return;
+
+      if (msg.type === "READY") {
+        addLog("CONTENT READY", msg);
+        postToContent("SESSION", { sessionId });
+
+        // 초기 자동 Resume 제공(원하면 주석 해제)
+        // postToContent("RESUME_DATA", { location: resumeStore.location, state: resumeStore.state });
+        return;
+      }
+
+      // 콘텐츠 → 플레이어 이벤트
+      if (msg.type === "EVENT") {
+        await trackingApi("EVENT", { sessionId, meta: msg.meta, ...msg.payload, ts: msg.ts });
+        return;
+      }
+      if (msg.type === "LOCATION") {
+        resumeStore.location = msg.payload.location;
+        await trackingApi("LOCATION", { sessionId, meta: msg.meta, ...msg.payload, ts: msg.ts });
+        return;
+      }
+      if (msg.type === "STATE") {
+        resumeStore.state = msg.payload.state;
+        await trackingApi("STATE", { sessionId, meta: msg.meta, ...msg.payload, ts: msg.ts });
+        return;
+      }
+      if (msg.type === "SUSPEND") {
+        resumeStore.location = msg.payload.location;
+        resumeStore.state = msg.payload.state;
+        await trackingApi("SUSPEND", { sessionId, meta: msg.meta, ...msg.payload, ts: msg.ts });
+        return;
+      }
+      if (msg.type === "RESUME_REQUEST") {
+        addLog("RESUME_REQUEST", { location: resumeStore.location, hasState: !!resumeStore.state });
+        postToContent("RESUME_DATA", { location: resumeStore.location, state: resumeStore.state });
+        return;
+      }
+      if (msg.type === "COMPLETE") {
+        await trackingApi("COMPLETE", { sessionId, meta: msg.meta, ...msg.payload, ts: msg.ts });
+        return;
+      }
+    });
+
+    document.getElementById("btnClear").addEventListener("click", () => {
+      logEl.innerHTML = "";
+    });
+
+    // 콘텐츠 네비게이션 기능
+    const contentButtons = document.querySelectorAll(".content-btn");
+
+    contentButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const newSrc = btn.getAttribute("data-src");
+
+        // 활성 버튼 스타일 변경
+        contentButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        // iframe 소스 변경
+        frame.src = newSrc;
+
+        // 로그 초기화
+        logEl.innerHTML = "";
+
+        // Resume 저장소 초기화
+        resumeStore.location = null;
+        resumeStore.state = null;
+
+        addLog("콘텐츠 변경됨", { src: newSrc });
+      });
+    });
+  </script>
+</body>
+</html>
