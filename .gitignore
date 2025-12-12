@@ -21,7 +21,7 @@ $RECYCLE.BIN/
 
 # Editor and IDE Files
 # Visual Studio Code
-# .vscode/
+.vscode/
 *.code-workspace
 .history/
 
